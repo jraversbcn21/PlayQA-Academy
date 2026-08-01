@@ -64,6 +64,9 @@ export const metadata: Metadata = {
     description:
       "Master software QA: Fundamentals, ISTQB CTFL certification, and Playwright automation — all in one platform.",
   },
+  verification: {
+    google: "RsYx-WL1f6CCPuZ8JqsA50XOEVaNDCZfI1fdDxW1wCY",
+  },
 };
 
 interface RootLayoutProps {
