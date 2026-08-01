@@ -30,6 +30,16 @@ const PROTECTED_PATTERNS = [
   /^\/[a-z]{2}\/settings/,
 ];
 
+/**
+ * Public exception to the /learn/ pattern above: the QA Fundamentals campus
+ * is open to anonymous readers (growth roadmap Phase 2). The rule is
+ * prefix-based and depends on a contract documented in
+ * src/lib/constants/campuses.ts — only qaFundamentals module ids may ever
+ * start with "qaf-". robots.ts mirrors this same exception; change both
+ * together.
+ */
+const PUBLIC_LEARN_PREFIX = /^\/[a-z]{2}\/learn\/qaf-/;
+
 function getLocale(
   request: NextRequest
 ): string {
@@ -83,9 +93,9 @@ export function middleware(request: NextRequest): NextResponse | undefined {
   }
 
   // 2. Protected route check
-  const isProtected = PROTECTED_PATTERNS.some((pattern) =>
-    pattern.test(pathname)
-  );
+  const isProtected =
+    PROTECTED_PATTERNS.some((pattern) => pattern.test(pathname)) &&
+    !PUBLIC_LEARN_PREFIX.test(pathname);
 
   if (isProtected) {
     const authCookie = request.cookies.get("auth_token");

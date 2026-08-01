@@ -60,6 +60,10 @@ export const CAMPUSES: Campus[] = [
       es: "Introducción al testing de software y conceptos esenciales para comenzar tu carrera en QA.",
       en: "Introduction to software testing and essential concepts to start your QA career.",
     },
+    // CONTRACT: these ids all start with "qaf-", and only this campus's ids
+    // may ever use that prefix. middleware.ts and robots.ts expose
+    // /learn/qaf-* publicly based on it — a future campus whose module ids
+    // began with "qaf-" would silently become public.
     moduleIds: [
       "qaf-m1",
       "qaf-m2",
