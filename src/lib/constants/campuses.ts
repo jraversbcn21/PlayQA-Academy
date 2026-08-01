@@ -64,6 +64,9 @@ export const CAMPUSES: Campus[] = [
     // may ever use that prefix. middleware.ts and robots.ts expose
     // /learn/qaf-* publicly based on it — a future campus whose module ids
     // began with "qaf-" would silently become public.
+    // Flipping ENFORCE_MODULE_LOCKING to true would render qaf-m2..m10 as
+    // locked for anonymous readers (who have no progress doc to unlock them
+    // with), defeating the public campus.
     moduleIds: [
       "qaf-m1",
       "qaf-m2",
