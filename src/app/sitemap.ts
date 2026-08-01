@@ -1,12 +1,15 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/constants/site";
 import { languages } from "@/lib/i18n/settings";
+import { getCampusById } from "@/lib/constants/campuses";
+import { getModuleById } from "@/lib/constants/curriculum";
 
 /**
- * Public, unauthenticated routes only — auth-gated pages (dashboard, learn,
+ * Public, unauthenticated routes only — auth-gated pages (dashboard,
  * leaderboard, badges, exams, settings) are excluded here the same way
  * they're excluded in robots.ts, since Google can't index past their
- * sign-in redirect.
+ * sign-in redirect. QA Fundamentals module and lesson routes (learn/qaf-*) are
+ * public and included.
  */
 const STATIC_ROUTES = [
   "",
@@ -45,7 +48,22 @@ const STATIC_ROUTES = [
 // no dependency on the data layer's shape.
 const CAMPUS_ROUTES = ["/campus/qaFundamentals", "/campus/istqb", "/campus/automation"];
 
-const ROUTES = [...STATIC_ROUTES, ...CAMPUS_ROUTES];
+// QA Fundamentals is the one publicly-readable campus (growth roadmap
+// Phase 2 — see PUBLIC_LEARN_PREFIX in src/middleware.ts). Derived from the
+// campus/curriculum registries instead of hand-listed: 55 routes would
+// drift, and CAMPUS_ROUTES' own comment already drifted at 3.
+const QAF_LEARN_ROUTES = (getCampusById("qaFundamentals")?.moduleIds ?? []).flatMap(
+  (moduleId) => {
+    const mod = getModuleById(moduleId);
+    if (!mod) return [];
+    return [
+      `/learn/${moduleId}`,
+      ...mod.lessons.map((lesson) => `/learn/${moduleId}/${lesson.id}`),
+    ];
+  }
+);
+
+const ROUTES = [...STATIC_ROUTES, ...CAMPUS_ROUTES, ...QAF_LEARN_ROUTES];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
