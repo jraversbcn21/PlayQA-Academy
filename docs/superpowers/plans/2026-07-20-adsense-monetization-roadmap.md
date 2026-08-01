@@ -1,6 +1,6 @@
 # Growth & Monetization Roadmap — custom domain → traffic → AdSense
 
-> **Status:** Phases 0 and 1 done and deployed to production (2026-07-20, `main` @ `083b1ac`). Phase 2 (open QA Fundamentals publicly) is done, verified against a real production build, and pushed to production (2026-08-01, commits `5166f39`..`70edeb9`) — see AGENTS.md's "Verified in browser" #27 for the full verification. Phase 3 (contact page + LSSI aviso legal) is next. Google Search Console setup (part of Phase 1, external/manual) is still open.
+> **Status:** Phases 0, 1, and 2 are all CLOSED and deployed to production. Phase 2 (open QA Fundamentals publicly) shipped 2026-08-01 (commits `5166f39`..`c3a2077`, including a final-review fix wave for crawlable links + SSR-accurate anonymous state) — see AGENTS.md's "Verified in browser" #27-29 for the full verification, including the Search Console sitemap re-read confirming 174/174 URLs discovered. **Phase 3 (contact page + LSSI aviso legal) is next** — nothing from Phases 0-2 remains open.
 > **Started:** 2026-07-20. Owner: Jorge.
 > **Context:** AdSense readiness audit run 2026-07-20 against the live site + repo at commit `1e38460`.
 > **Reordered 2026-07-20** after establishing real traffic figures — see "Why this order" below.
@@ -60,7 +60,7 @@ This project has already been bitten by this exact failure mode (see `[[project_
 
 Nothing else matters until Google can find and index the site.
 
-- [ ] **Google Search Console** — not set up yet (Jorge to do — external dashboard action). Register `www.playqacademy.com`, submit the sitemap, request indexing. This is the instrument panel for every later decision
+- [x] **Google Search Console** — CLOSED (2026-08-01). Registered `www.playqacademy.com`, sitemap submitted. Verified via a resubmit-and-reread: "Discovered pages" went from a stale 64 (pre-Phase-2 read) to 174, matching the live sitemap's true count (110 `qaf-` + 64 pre-existing) exactly. Indexing requested for `/es/learn/qaf-m1` via URL Inspection ("Indexing requested" confirmed). This is the instrument panel for every later decision — check it periodically during Phase 4
 - [x] **`robots.txt`** — `src/app/robots.ts` (Next 15 native), disallows the auth-gated patterns. Found and fixed a real bug along the way: `middleware.ts`'s `isStaticAsset()` didn't recognize `.txt`/`.xml`, so `/robots.txt` and `/sitemap.xml` were being redirected to `/es/robots.txt` (404) before this fix
 - [x] **`sitemap.xml`** — `src/app/sitemap.ts`; 32 public routes × 2 locales = 64 URLs, each with `hreflang` alternates
 - [x] **Per-page metadata** — all 32 public routes now have their own `title`/`description`/`canonical` (home, about, curriculum, glossary, playground index + 21 exercises, 3 campus pages, privacy/terms/cookies). `src/lib/seo.ts` centralizes the canonical/hreflang builder (`buildAlternates`) and the Playground-specific one (`buildExerciseMetadata`, sourced from `PLAYGROUND_EXERCISES` so copy can't drift from the exercise cards). Several public pages were Client Components (can't export `generateMetadata`) — each got split into a server `page.tsx` + sibling `XxxClient.tsx`, the same pattern already used by `campus/[campusId]`/auth pages
@@ -77,7 +77,7 @@ Right after pushing Phase 1 to `main`, `www.playqacademy.com` returned 503 on re
 
 ---
 
-## Phase 2 — Open QA Fundamentals to the public (DONE, 2026-08-01)
+## Phase 2 — Open QA Fundamentals to the public (CLOSED, 2026-08-01)
 
 **The highest-leverage move in this roadmap.** The platform's substantial content — 111 lessons across 3 campuses — sits under `/learn/*`, gated by `src/middleware.ts:31`. Googlebot sees only: landing, `/about` (115 lines), `/curriculum`, `/glossary`, `/playground`.
 
@@ -98,16 +98,21 @@ Why this works:
 
 **Verification:** full 7-group, 59-assertion Playwright run against a production build (`npm run build && npm run start`, not dev mode) — see AGENTS.md's "Verified in browser" #27 and `.superpowers/sdd/2026-08-01-open-qa-fundamentals/task-7-report.md` for the complete breakdown.
 
+- [x] **Final whole-branch review + fix wave (2026-08-01, commits `bc59d03`, `c3a2077`)** — a most-capable-model review of the full Phase 2 range found the security/gating story sound but flagged two Important SEO gaps, both fixed same day: module-page lesson rows/CTA became real `<Link>`s (were `div onClick`, invisible to Googlebot); the signed-out Next `<a>`/CTA now render in the *served* HTML via a cookie-hinted `initialAnonymous` passed from the server page (previously only appeared post-hydration), with no hydration mismatch or CTA flash for signed-in users. Also bundled: `notFound()` for unknown `qaf-*` slugs, anonymous breadcrumbs pointing at the campus page instead of the gated dashboard. Scoped re-review: all 5 findings ADDRESSED, no new breakage. See AGENTS.md's "Verified in browser" #28.
+- [x] **Search Console close-out (2026-08-01)** — requested indexing for `/es/learn/qaf-m1`; resubmitted the sitemap and confirmed Google's re-read shows 174/174 discovered URLs (was stuck at a stale 64 from before the deploy). See AGENTS.md's "Verified in browser" #29.
+
 ---
 
 ## Phase 3 — Contact & legal surfaces
 
 Worth doing regardless of monetization; required before it.
 
-- [ ] **Contact page** (`/contact`) — does not exist today. Real route + footer link, not an email buried in the privacy text
-- [ ] **Aviso legal (LSSI)** — Spain requires identifying details once a site is monetized: name/company, **NIF/CIF**, registered address, contact email. Today the site only says "SidMaier, Barcelona". Note: PayPal is a payment processor, not a fiscal identity — it does not satisfy this. **Jorge to confirm the exact publishable details with his gestor**; out of scope for the assistant per `[[project_buymeacoffee_setup]]`
-- [ ] Fix the domain reference in `privacy.s1Body` — says "accesible desde https://playq.academy", a domain never deployed. Must become `playqacademy.com`
-- [ ] Clean up the footer placeholders: `github.com` and `linkedin.com` are generic landing pages, not real profiles; "Cursos" points at `/`
+- [ ] **Contact page** (`/contact`) — does not exist today. Real route + footer link, not an email buried in the privacy text. **Not started.**
+- [ ] **Aviso legal (LSSI)** — Spain requires identifying details once a site is monetized: name/company, **NIF/CIF**, registered address, contact email. Today the site only says "SidMaier, Barcelona". Note: PayPal is a payment processor, not a fiscal identity — it does not satisfy this. **Blocked on Jorge confirming the exact publishable details with his gestor**; out of scope for the assistant per `[[project_buymeacoffee_setup]]`. **Not started — the actual gate for this phase.**
+- [ ] Fix the domain reference in `privacy.s1Body` — says "accesible desde https://playq.academy", a domain never deployed. Must become `playqacademy.com`. **Not started.**
+- [x] ~~Clean up the footer placeholders: `github.com`/`linkedin.com` generic landing pages, "Cursos" points at `/`~~ — already fixed outside this roadmap's own tracking, before Phase 3 formally started: GitHub/LinkedIn now read from a single `SOCIAL_LINKS` constant pointing at Jorge's real profiles (2026-07-21, commit `c54d0ac`, see AGENTS.md "Verified in browser" #25e), and the footer's "Cursos" entry was replaced with a Glossary link (2026-08-01, commit `168574c`, see #26). Nothing left to do here — re-check `Footer.tsx`/`SOCIAL_LINKS` before assuming otherwise if this resurfaces.
+
+**To resume Phase 3:** the only real blocker is the LSSI aviso legal data from Jorge's gestor. The contact page and the `privacy.s1Body` domain fix have no external dependency and can be built any time — worth doing first while the legal data is pending.
 
 ---
 
@@ -162,4 +167,4 @@ Shipping AdSense against this text violates AdSense policy (which requires a tru
 1. **Traffic:** ~10 users, minimal. Drove the reorder above.
 2. **Fiscal details:** payments via PayPal — but that is not a fiscal identity; LSSI details still pending from his gestor.
 3. **Content:** open QA Fundamentals only. → Phase 2.
-4. **Search Console:** not set up. → Phase 1.
+4. **Search Console:** set up and confirmed 2026-08-01 — sitemap re-read shows 174/174 URLs discovered. → Phase 1 closed.
