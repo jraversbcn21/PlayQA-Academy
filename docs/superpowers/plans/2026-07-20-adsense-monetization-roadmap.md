@@ -1,6 +1,6 @@
 # Growth & Monetization Roadmap — custom domain → traffic → AdSense
 
-> **Status:** Phases 0 and 1 done and deployed to production (2026-07-20, `main` @ `083b1ac`). Phase 2 (open QA Fundamentals publicly) is done and verified against a real production build (2026-08-01, commits `5166f39`..`70edeb9`) — not yet pushed to production as of this line; see AGENTS.md's "Verified in browser" #27 for the full verification. Phase 3 (contact page + LSSI aviso legal) is next. Google Search Console setup (part of Phase 1, external/manual) is still open.
+> **Status:** Phases 0 and 1 done and deployed to production (2026-07-20, `main` @ `083b1ac`). Phase 2 (open QA Fundamentals publicly) is done, verified against a real production build, and pushed to production (2026-08-01, commits `5166f39`..`70edeb9`) — see AGENTS.md's "Verified in browser" #27 for the full verification. Phase 3 (contact page + LSSI aviso legal) is next. Google Search Console setup (part of Phase 1, external/manual) is still open.
 > **Started:** 2026-07-20. Owner: Jorge.
 > **Context:** AdSense readiness audit run 2026-07-20 against the live site + repo at commit `1e38460`.
 > **Reordered 2026-07-20** after establishing real traffic figures — see "Why this order" below.
