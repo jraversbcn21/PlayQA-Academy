@@ -107,12 +107,12 @@ Why this works:
 
 Worth doing regardless of monetization; required before it.
 
-- [ ] **Contact page** (`/contact`) — does not exist today. Real route + footer link, not an email buried in the privacy text. **Not started.**
+- [x] **Contact page** (`/contact`) — CLOSED (2026-08-01, commit `a6b37cc`). Real route (same server-component/`generateMetadata` pattern as `/privacy`/`/terms`), footer link (Legal column), sitemap entry. Reuses the existing `sidmaierlabs@gmail.com` address. Verified against a production build in both locales, deployed live.
 - [ ] **Aviso legal (LSSI)** — Spain requires identifying details once a site is monetized: name/company, **NIF/CIF**, registered address, contact email. Today the site only says "SidMaier, Barcelona". Note: PayPal is a payment processor, not a fiscal identity — it does not satisfy this. **Blocked on Jorge confirming the exact publishable details with his gestor**; out of scope for the assistant per `[[project_buymeacoffee_setup]]`. **Not started — the actual gate for this phase.**
 - [x] **Fix the domain reference in `privacy.s1Body`** — CLOSED (2026-08-01, commit `2b1442b`). Was "accesible desde https://playq.academy" (a domain never deployed); now `https://www.playqacademy.com` in both locales, `lastUpdated` bumped since the body content changed.
 - [x] ~~Clean up the footer placeholders: `github.com`/`linkedin.com` generic landing pages, "Cursos" points at `/`~~ — already fixed outside this roadmap's own tracking, before Phase 3 formally started: GitHub/LinkedIn now read from a single `SOCIAL_LINKS` constant pointing at Jorge's real profiles (2026-07-21, commit `c54d0ac`, see AGENTS.md "Verified in browser" #25e), and the footer's "Cursos" entry was replaced with a Glossary link (2026-08-01, commit `168574c`, see #26). Nothing left to do here — re-check `Footer.tsx`/`SOCIAL_LINKS` before assuming otherwise if this resurfaces.
 
-**To resume Phase 3:** the only remaining blocker is the LSSI aviso legal data from Jorge's gestor. The contact page has no external dependency and can be built any time while that's pending.
+**To resume Phase 3:** the only remaining item is the LSSI aviso legal, blocked on data from Jorge's gestor. Nothing else in this phase is left to build.
 
 ---
 
