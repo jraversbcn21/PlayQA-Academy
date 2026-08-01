@@ -89,7 +89,7 @@ function getFooterColumns(): FooterColumn[] {
     {
       titleKey: "footer.learn.title",
       links: [
-        { labelKey: "footer.learn.courses", href: "/" },
+        { labelKey: "footer.learn.glossary", href: "/glossary" },
         { labelKey: "footer.learn.curriculum", href: "/curriculum" },
         { labelKey: "footer.learn.playground", href: "/playground" },
       ],
