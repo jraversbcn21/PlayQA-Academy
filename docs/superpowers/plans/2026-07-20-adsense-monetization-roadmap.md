@@ -1,6 +1,6 @@
 # Growth & Monetization Roadmap — custom domain → traffic → AdSense
 
-> **Status:** Phases 0 and 1 done and deployed to production (2026-07-20, `main` @ `083b1ac`). Phase 2 (open QA Fundamentals publicly) is next — not started. Google Search Console setup (part of Phase 1, external/manual) is still open.
+> **Status:** Phases 0 and 1 done and deployed to production (2026-07-20, `main` @ `083b1ac`). Phase 2 (open QA Fundamentals publicly) is done and verified against a real production build (2026-08-01, commits `5166f39`..`70edeb9`) — not yet pushed to production as of this line; see AGENTS.md's "Verified in browser" #27 for the full verification. Phase 3 (contact page + LSSI aviso legal) is next. Google Search Console setup (part of Phase 1, external/manual) is still open.
 > **Started:** 2026-07-20. Owner: Jorge.
 > **Context:** AdSense readiness audit run 2026-07-20 against the live site + repo at commit `1e38460`.
 > **Reordered 2026-07-20** after establishing real traffic figures — see "Why this order" below.
@@ -77,7 +77,7 @@ Right after pushing Phase 1 to `main`, `www.playqacademy.com` returned 503 on re
 
 ---
 
-## Phase 2 — Open QA Fundamentals to the public
+## Phase 2 — Open QA Fundamentals to the public (DONE, 2026-08-01)
 
 **The highest-leverage move in this roadmap.** The platform's substantial content — 111 lessons across 3 campuses — sits under `/learn/*`, gated by `src/middleware.ts:31`. Googlebot sees only: landing, `/about` (115 lines), `/curriculum`, `/glossary`, `/playground`.
 
@@ -88,13 +88,15 @@ Why this works:
 - Targets real search demand ("qué es ISO 25010", "tipos de pruebas de software", "cómo escribir un reporte de bug")
 - Creates a natural funnel: search → read free → register for ISTQB/Automation
 
-- [ ] Design the gating change — `/learn/qaf-*` public, everything else unchanged. Note `PROTECTED_PATTERNS` in `middleware.ts` currently matches `/learn/` wholesale; it needs to become campus-aware
-- [ ] Handle the signed-out lesson experience: progress tracking, "mark complete", and gamification all assume a user. Decide what a signed-out reader sees (likely: full lesson content, with completion/progress UI replaced by a sign-up CTA)
-- [ ] Confirm no Firestore writes are attempted for signed-out readers
-- [ ] Verify crawlability via view-source, not just visual presence
-- [ ] Add the new public lesson URLs to the sitemap
+- [x] Design the gating change — `/learn/qaf-*` public, everything else unchanged (commits `5166f39` spec, `78cf074` plan, `656cb2e` `middleware.ts`'s `PUBLIC_LEARN_PREFIX` carve-out from `PROTECTED_PATTERNS`, `3346dee` matching `robots.ts` `allow` rule). Rests on a prefix contract documented on `qaFundamentals`'s `moduleIds` in `src/lib/constants/campuses.ts`: only that campus's module ids may ever start with `"qaf-"`.
+- [x] Handle the signed-out lesson experience: progress tracking, "mark complete", and gamification all assume a user (commits `e289e33` i18n CTA copy, `506413b` server/client split — `ModulePageClient`/`LessonPlayerClient` behind server `page.tsx` files that own `generateMetadata`, `5d371cd` signed-out chrome). Landed as: full lesson content renders identically to signed-in; mark-complete and its writes are hidden entirely; "Next lesson" is a real crawlable `<a href>`; the bookmark button redirects to `/auth/sign-up?callbackUrl=...`; a CTA card pitches the free account.
+- [x] Confirm no Firestore writes are attempted for signed-out readers — verified in Task 7 (`.superpowers/sdd/2026-08-01-open-qa-fundamentals/task-7-report.md`): `page.on("request")` across a module page + 2 lessons signed out shows zero `firestore.googleapis.com`/`firebaseio.com` requests.
+- [x] Verify crawlability via view-source, not just visual presence — verified in Task 7 against a real production build: `GET /es/learn/qaf-m1` and `/es/learn/qaf-m1/qaf-m1-l1` return 200 with their own `<title>` and correct `<link rel="canonical">` present in the pre-hydration served HTML.
+- [x] Add the new public lesson URLs to the sitemap (commit `70edeb9`) — 110 unique `/learn/qaf-` URLs (10 modules + 45 lessons × 2 locales), 10 sampled and individually confirmed 200.
 
-**Open question:** whether the existing `SignupBanner` pattern (`src/components/playground/SignupBanner.tsx`) should be reused on public lessons.
+**Open question (resolved):** the existing `SignupBanner` pattern was not reused as-is — the lesson player got its own dedicated CTA card (`lesson.player.signupCta*` i18n keys) instead, since the context (mid-lesson, replacing the mark-complete/progress UI) differs from the Playground index's dismissible nudge banner.
+
+**Verification:** full 7-group, 59-assertion Playwright run against a production build (`npm run build && npm run start`, not dev mode) — see AGENTS.md's "Verified in browser" #27 and `.superpowers/sdd/2026-08-01-open-qa-fundamentals/task-7-report.md` for the complete breakdown.
 
 ---
 
