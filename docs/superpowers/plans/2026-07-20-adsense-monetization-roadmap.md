@@ -1,6 +1,6 @@
 # Growth & Monetization Roadmap — custom domain → traffic → AdSense
 
-> **Status:** Phases 0, 1, and 2 are all CLOSED and deployed to production. Phase 2 (open QA Fundamentals publicly) shipped 2026-08-01 (commits `5166f39`..`c3a2077`, including a final-review fix wave for crawlable links + SSR-accurate anonymous state) — see AGENTS.md's "Verified in browser" #27-29 for the full verification, including the Search Console sitemap re-read confirming 174/174 URLs discovered. **Phase 3 (contact page + LSSI aviso legal) is next** — nothing from Phases 0-2 remains open.
+> **Status:** Phases 0, 1, and 2 are all CLOSED and deployed to production — see AGENTS.md's "Verified in browser" #27-29 for the full Phase 2 verification, including the Search Console sitemap re-read confirming 174/174 URLs discovered. **Phase 3 is in progress:** the `privacy.s1Body` domain fix (`2b1442b`) and the `/contact` page (`a6b37cc`) are both shipped and live — see "Verified in browser" #30-31. **Only the LSSI aviso legal remains, blocked on fiscal details from Jorge's gestor.**
 > **Started:** 2026-07-20. Owner: Jorge.
 > **Context:** AdSense readiness audit run 2026-07-20 against the live site + repo at commit `1e38460`.
 > **Reordered 2026-07-20** after establishing real traffic figures — see "Why this order" below.
@@ -32,7 +32,7 @@ Two orders of magnitude short. Worse, approval odds are poor at this traffic lev
 
 ---
 
-## Phase 0 — Custom domain (IN PROGRESS)
+## Phase 0 — Custom domain (DONE)
 
 `playqacademy.vercel.app` cannot be monetized properly: `ads.txt` must live at the domain root, and we do not control `vercel.app`. A `.vercel.app` subdomain also reads as a test project to a reviewer. It is also simply a better base for everything downstream.
 
@@ -56,7 +56,7 @@ This project has already been bitten by this exact failure mode (see `[[project_
 
 ---
 
-## Phase 1 — Discoverability
+## Phase 1 — Discoverability (DONE)
 
 Nothing else matters until Google can find and index the site.
 
@@ -103,7 +103,7 @@ Why this works:
 
 ---
 
-## Phase 3 — Contact & legal surfaces
+## Phase 3 — Contact & legal surfaces (IN PROGRESS)
 
 Worth doing regardless of monetization; required before it.
 
