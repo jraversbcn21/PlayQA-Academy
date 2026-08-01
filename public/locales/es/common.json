@@ -356,7 +356,8 @@
       "title": "Legal",
       "privacy": "Política de privacidad",
       "terms": "Términos de servicio",
-      "cookies": "Política de cookies"
+      "cookies": "Política de cookies",
+      "contact": "Contacto"
     },
     "copyright": "© {{year}} PlayQAcademy. Todos los derechos reservados."
   },
@@ -635,5 +636,16 @@
     ],
     "s6Heading": "6. Contacto",
     "s6Body": "Para cualquier pregunta o consulta relacionada con nuestra Política de Cookies, puedes contactar con nosotros en la siguiente dirección de correo electrónico: sidmaierlabs@gmail.com. Responderemos a tu consulta a la mayor brevedad posible."
+  },
+  "contact": {
+    "title": "Contacto",
+    "metaDescription": "Ponte en contacto con el equipo de PlayQAcademy: dudas sobre el contenido, sugerencias, problemas técnicos o consultas legales.",
+    "backToHome": "Volver al inicio",
+    "heading": "¿Tienes alguna pregunta?",
+    "intro": "Ya sea una duda sobre una lección, un problema técnico, una sugerencia o una consulta legal, estaremos encantados de ayudarte. Escríbenos directamente por correo electrónico y te responderemos lo antes posible.",
+    "emailLabel": "Escríbenos a",
+    "emailCta": "Enviar un correo",
+    "responseNote": "Normalmente respondemos en un plazo de 2-3 días laborables.",
+    "legalNotePrefix": "Para consultas relacionadas con tus datos personales, consulta también nuestra"
   }
 }

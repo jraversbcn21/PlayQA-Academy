@@ -14,6 +14,7 @@ import { getModuleById } from "@/lib/constants/curriculum";
 const STATIC_ROUTES = [
   "",
   "/about",
+  "/contact",
   "/curriculum",
   "/glossary",
   "/privacy",

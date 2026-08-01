@@ -107,6 +107,7 @@ function getFooterColumns(): FooterColumn[] {
         { labelKey: "footer.legal.privacy", href: "/privacy" },
         { labelKey: "footer.legal.terms", href: "/terms" },
         { labelKey: "footer.legal.cookies", href: "/cookies" },
+        { labelKey: "footer.legal.contact", href: "/contact" },
       ],
     },
   ];
