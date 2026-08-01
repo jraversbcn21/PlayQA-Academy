@@ -226,6 +226,9 @@
       "markComplete": "Marcar como Completada",
       "completed": "Completada ✓",
       "completeToContinue": "Completa esta lección para continuar",
+      "signupCtaTitle": "¿Quieres guardar tu progreso?",
+      "signupCtaBody": "Crea una cuenta gratis para guardar tu avance, ganar puntos e insignias y desbloquear los campus de ISTQB y Automatización.",
+      "signupCtaButton": "Crear cuenta gratis",
       "resources": "Recursos"
     },
     "copyCode": "Copiar",
