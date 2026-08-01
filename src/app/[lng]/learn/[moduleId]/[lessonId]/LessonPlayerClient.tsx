@@ -120,6 +120,14 @@ export default function LessonPlayerClient({
   const persistedCompleted =
     !!user && getLessonStatus(moduleId, lessonId) === "completed";
   const lessonCompleted = persistedCompleted || justCompleted;
+
+  // Signed-out reader (QA Fundamentals is public — growth roadmap Phase 2).
+  // Gated on !authLoading so a signed-in user never sees a flash of the
+  // sign-up CTA during Firebase Auth hydration.
+  const anonymous = !authLoading && !user;
+  const signUpHref = `/${lng}/auth/sign-up?callbackUrl=${encodeURIComponent(
+    `/${lng}/learn/${moduleId}/${lessonId}`
+  )}`;
   const [completing, setCompleting] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
 
@@ -232,7 +240,7 @@ export default function LessonPlayerClient({
             <button
               type="button"
               disabled={bookmarkLoading}
-              onClick={toggle}
+              onClick={anonymous ? () => router.push(signUpHref) : toggle}
               className={[
                 "rounded p-1 transition-colors hover:bg-[var(--color-bg-elevated)]",
                 bookmarked
@@ -302,6 +310,24 @@ export default function LessonPlayerClient({
             </ul>
           </div>
         )}
+
+        {/* Signed-out: sign-up CTA where completion/progress would be */}
+        {anonymous && (
+          <div className="mt-10 rounded-xl border border-brand-forest-500/30 bg-brand-forest-500/10 p-6 text-center">
+            <p className="text-base font-semibold text-[var(--color-text-primary)]">
+              {t("lesson.player.signupCtaTitle")}
+            </p>
+            <p className="mx-auto mt-2 max-w-xl text-sm text-[var(--color-text-muted)]">
+              {t("lesson.player.signupCtaBody")}
+            </p>
+            <Link
+              href={signUpHref}
+              className="mt-4 inline-flex items-center justify-center rounded-lg bg-brand-forest-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-forest-400"
+            >
+              {t("lesson.player.signupCtaButton")}
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* ── Bottom navigation ───────────────────────────────── */}
@@ -325,51 +351,65 @@ export default function LessonPlayerClient({
             <div />
           )}
 
-          {/* Mark complete */}
-          <Button
-            variant="primary"
-            size="sm"
-            disabled={lessonCompleted || authLoading}
-            loading={completing}
-            className={
-              lessonCompleted
-                ? "!bg-brand-gold-600"
-                : "!bg-brand-gold-600 hover:!bg-brand-gold-500"
-            }
-            onClick={handleMarkComplete}
-          >
-            {lessonCompleted
-              ? t("lesson.player.completed")
-              : t("lesson.player.markComplete")}
-          </Button>
-
-          {/* Next */}
-          {nextLesson ? (
+          {/* Mark complete (signed-in) — anonymous readers get the CTA card above instead */}
+          {anonymous ? (
+            <div />
+          ) : (
             <Button
               variant="primary"
               size="sm"
-              rightIcon={<ArrowRight />}
-              disabled={!lessonCompleted}
+              disabled={lessonCompleted || authLoading}
+              loading={completing}
               className={
-                !lessonCompleted
-                  ? ""
-                  : "!bg-brand-terra-500 hover:!bg-brand-terra-400"
+                lessonCompleted
+                  ? "!bg-brand-gold-600"
+                  : "!bg-brand-gold-600 hover:!bg-brand-gold-500"
               }
-              onClick={() => {
-                if (lessonCompleted) {
-                  router.push(
-                    `/${lng}/learn/${nextLesson.moduleId}/${nextLesson.lessonId}`
-                  );
-                }
-              }}
-              title={
-                !lessonCompleted
-                  ? t("lesson.player.completeToContinue")
-                  : undefined
-              }
+              onClick={handleMarkComplete}
             >
-              {t("lesson.player.next")}
+              {lessonCompleted
+                ? t("lesson.player.completed")
+                : t("lesson.player.markComplete")}
             </Button>
+          )}
+
+          {/* Next */}
+          {nextLesson ? (
+            anonymous ? (
+              <Link
+                href={`/${lng}/learn/${nextLesson.moduleId}/${nextLesson.lessonId}`}
+                className="inline-flex items-center gap-2 rounded-lg bg-brand-terra-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-terra-400"
+              >
+                {t("lesson.player.next")}
+                <ArrowRight />
+              </Link>
+            ) : (
+              <Button
+                variant="primary"
+                size="sm"
+                rightIcon={<ArrowRight />}
+                disabled={!lessonCompleted}
+                className={
+                  !lessonCompleted
+                    ? ""
+                    : "!bg-brand-terra-500 hover:!bg-brand-terra-400"
+                }
+                onClick={() => {
+                  if (lessonCompleted) {
+                    router.push(
+                      `/${lng}/learn/${nextLesson.moduleId}/${nextLesson.lessonId}`
+                    );
+                  }
+                }}
+                title={
+                  !lessonCompleted
+                    ? t("lesson.player.completeToContinue")
+                    : undefined
+                }
+              >
+                {t("lesson.player.next")}
+              </Button>
+            )
           ) : (
             <div />
           )}
