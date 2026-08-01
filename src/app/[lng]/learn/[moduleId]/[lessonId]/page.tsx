@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import { getModuleById, getLessonById } from "@/lib/constants/curriculum";
 import { buildAlternates } from "@/lib/seo";
 import LessonPlayerClient from "./LessonPlayerClient";
@@ -39,7 +41,19 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
 
 export default async function LessonPage(props: PageParams) {
   const { lng, moduleId, lessonId } = await props.params;
+  const mod = getModuleById(moduleId);
+  const lesson = getLessonById(moduleId, lessonId);
+  if (!mod || !lesson) notFound();
+
+  const cookieStore = await cookies();
+  const hasAuthCookie = !!cookieStore.get("auth_token")?.value;
+
   return (
-    <LessonPlayerClient lng={lng} moduleId={moduleId} lessonId={lessonId} />
+    <LessonPlayerClient
+      lng={lng}
+      moduleId={moduleId}
+      lessonId={lessonId}
+      initialAnonymous={!hasAuthCookie}
+    />
   );
 }

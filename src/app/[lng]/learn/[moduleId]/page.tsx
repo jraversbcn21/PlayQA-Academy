@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import { getModuleById } from "@/lib/constants/curriculum";
 import { buildAlternates } from "@/lib/seo";
 import ModulePageClient from "./ModulePageClient";
@@ -33,5 +35,17 @@ export async function generateMetadata(props: PageParams): Promise<Metadata> {
 
 export default async function ModulePage(props: PageParams) {
   const { lng, moduleId } = await props.params;
-  return <ModulePageClient lng={lng} moduleId={moduleId} />;
+  const mod = getModuleById(moduleId);
+  if (!mod) notFound();
+
+  const cookieStore = await cookies();
+  const hasAuthCookie = !!cookieStore.get("auth_token")?.value;
+
+  return (
+    <ModulePageClient
+      lng={lng}
+      moduleId={moduleId}
+      initialAnonymous={!hasAuthCookie}
+    />
+  );
 }

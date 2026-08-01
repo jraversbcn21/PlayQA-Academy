@@ -2,14 +2,12 @@
 
 import { type ReactNode } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n/client";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/lib/hooks/useProgress";
 import { getModuleById } from "@/lib/constants/curriculum";
 import { getCampusForModule } from "@/lib/constants/campuses";
 import type { CurriculumLesson } from "@/lib/constants/curriculum";
-import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import ProgressBar from "@/components/ui/ProgressBar";
 
@@ -55,18 +53,36 @@ function LessonStatusIcon({ status }: { status: "completed" | "available" | "loc
 interface ModulePageClientProps {
   lng: string;
   moduleId: string;
+  /**
+   * SSR-derived default for whether this reader is signed out, computed by
+   * the server page from the `auth_token` cookie (see middleware.ts). Used
+   * as the `anonymous` value until Firebase Auth settles client-side, so
+   * the first client render matches SSR exactly (no hydration mismatch,
+   * no CTA/breadcrumb flash for signed-in users) — see the equivalent
+   * pattern in LessonPlayerClient.
+   */
+  initialAnonymous: boolean;
 }
 
 export default function ModulePageClient({
   lng,
   moduleId,
+  initialAnonymous,
 }: ModulePageClientProps) {
   const { t: tFn } = useTranslation("common");
-  const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { isModuleUnlocked, getLessonStatus, progressData } = useProgress(
     user?.uid
   );
+
+  // Signed-out reader (QA Fundamentals is public — growth roadmap Phase 2).
+  // Before Firebase Auth settles (authLoading), fall back to the SSR-computed
+  // value so the first client render matches the served HTML exactly.
+  const anonymous = authLoading ? initialAnonymous : !user;
+  const campus = getCampusForModule(moduleId);
+  const homeHref = anonymous && campus
+    ? `/${lng}/campus/${campus.id}`
+    : `/${lng}/dashboard`;
 
   const mod = getModuleById(moduleId);
   const unlocked = isModuleUnlocked(moduleId);
@@ -83,7 +99,6 @@ export default function ModulePageClient({
 
   const title = mod.title[lng as "es" | "en"] ?? mod.title.en;
   const description = mod.description[lng as "es" | "en"] ?? mod.description.en;
-  const campus = getCampusForModule(moduleId);
   const campusPosition = campus?.moduleIds.indexOf(moduleId) ?? -1;
   const campusRelativeNumber = campusPosition >= 0 ? campusPosition + 1 : mod.order;
   const prevModTitle = (() => {
@@ -113,7 +128,7 @@ export default function ModulePageClient({
         {/* Breadcrumb */}
         <nav className="mb-6 flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
           <Link
-            href={`/${lng}/dashboard`}
+            href={homeHref}
             className="transition-colors hover:text-[var(--color-text-primary)]"
           >
             {tFn("lesson.breadcrumb.dashboard")}
@@ -169,17 +184,18 @@ export default function ModulePageClient({
             <ProgressBar value={percent} size="md" showLabel />
           </div>
           {unlocked && firstAvailableLesson && (
-            <Button
-              variant="primary"
-              className="!bg-brand-terra-500 hover:!bg-brand-terra-400 shrink-0"
-              onClick={() =>
-                router.push(`/${lng}/learn/${moduleId}/${firstAvailableLesson.id}`)
-              }
+            <Link
+              href={`/${lng}/learn/${moduleId}/${firstAvailableLesson.id}`}
+              className={[
+                "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold",
+                "transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+                "bg-brand-terra-500 text-white shadow-sm hover:bg-brand-terra-400 focus-visible:outline-brand-terra-500",
+              ].join(" ")}
             >
               {percent > 0 && percent < 100
                 ? tFn("lesson.moduleOverview.continueModule")
                 : tFn("lesson.moduleOverview.startModule")}
-            </Button>
+            </Link>
           )}
         </div>
 
@@ -196,26 +212,8 @@ export default function ModulePageClient({
               return "hover:bg-[var(--color-bg-elevated)] cursor-pointer";
             })();
 
-            return (
-              <div
-                key={lesson.id}
-                className={[
-                  "flex items-center gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-3.5 transition-colors",
-                  rowStyle,
-                ].join(" ")}
-                onClick={() => {
-                  if (status !== "locked") {
-                    router.push(`/${lng}/learn/${moduleId}/${lesson.id}`);
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if ((e.key === "Enter" || e.key === " ") && status !== "locked") {
-                    router.push(`/${lng}/learn/${moduleId}/${lesson.id}`);
-                  }
-                }}
-                role={status !== "locked" ? "button" : "presentation"}
-                tabIndex={status !== "locked" ? 0 : -1}
-              >
+            const rowContent = (
+              <>
                 {/* Status icon */}
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-bg-elevated)]">
                   <LessonStatusIcon status={status} />
@@ -249,7 +247,30 @@ export default function ModulePageClient({
                     </Badge>
                   )}
                 </div>
-              </div>
+              </>
+            );
+
+            const rowClassName = [
+              "flex items-center gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 py-3.5 transition-colors",
+              rowStyle,
+            ].join(" ");
+
+            if (status === "locked") {
+              return (
+                <div key={lesson.id} className={rowClassName} aria-disabled="true">
+                  {rowContent}
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={lesson.id}
+                href={`/${lng}/learn/${moduleId}/${lesson.id}`}
+                className={rowClassName}
+              >
+                {rowContent}
+              </Link>
             );
           })}
         </div>

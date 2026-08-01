@@ -9,6 +9,7 @@ import { useProgress } from "@/lib/hooks/useProgress";
 import { useGamification } from "@/lib/hooks/useGamification";
 import { useGamificationUI } from "@/context/GamificationContext";
 import { getLevelFromPoints } from "@/lib/gamification/levels";
+import { getCampusForModule } from "@/lib/constants/campuses";
 import {
   useLesson,
   useLessonNavigation,
@@ -90,12 +91,23 @@ interface LessonPlayerClientProps {
   lng: string;
   moduleId: string;
   lessonId: string;
+  /**
+   * SSR-derived default for whether this reader is signed out, computed by
+   * the server page from the `auth_token` cookie (see middleware.ts). Used
+   * as the `anonymous` value until Firebase Auth settles client-side
+   * (authLoading flips false), so the first client render matches the
+   * served HTML exactly: cookie present ⇒ today's signed-in-shaped SSR;
+   * cookie absent ⇒ the crawlable "Next" <a> and CTA card are in the
+   * served HTML. No CTA flash for signed-in users, no hydration mismatch.
+   */
+  initialAnonymous: boolean;
 }
 
 export default function LessonPlayerClient({
   lng,
   moduleId,
   lessonId,
+  initialAnonymous,
 }: LessonPlayerClientProps) {
   const { t } = useTranslation("common");
   const router = useRouter();
@@ -122,9 +134,14 @@ export default function LessonPlayerClient({
   const lessonCompleted = persistedCompleted || justCompleted;
 
   // Signed-out reader (QA Fundamentals is public — growth roadmap Phase 2).
-  // Gated on !authLoading so a signed-in user never sees a flash of the
-  // sign-up CTA during Firebase Auth hydration.
-  const anonymous = !authLoading && !user;
+  // Before Firebase Auth settles (authLoading), fall back to the
+  // SSR-computed value so the first client render matches the served HTML
+  // exactly — no hydration mismatch, no CTA flash for signed-in users.
+  const anonymous = authLoading ? initialAnonymous : !user;
+  const campus = getCampusForModule(moduleId);
+  const homeHref = anonymous && campus
+    ? `/${lng}/campus/${campus.id}`
+    : `/${lng}/dashboard`;
   const signUpHref = `/${lng}/auth/sign-up?callbackUrl=${encodeURIComponent(
     `/${lng}/learn/${moduleId}/${lessonId}`
   )}`;
@@ -205,7 +222,7 @@ export default function LessonPlayerClient({
           {/* Breadcrumb */}
           <nav className="hidden min-w-0 flex-1 items-center gap-1.5 text-xs text-[var(--color-text-muted)] sm:flex">
             <Link
-              href={`/${lng}/dashboard`}
+              href={homeHref}
               className="shrink-0 transition-colors hover:text-[var(--color-text-primary)]"
             >
               {t("lesson.breadcrumb.dashboard")}
