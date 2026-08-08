@@ -2,6 +2,7 @@
 
 import { useState, use } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { getSubCampuses } from "@/lib/constants/campuses";
 import {
   getExercisesForCampus,
@@ -68,12 +69,17 @@ export default function PlaygroundIndexClient(props: PageProps) {
     lng
   } = params;
 
-  const [openCampusId, setOpenCampusId] = useState<string | null>(null);
-
   const campuses = getSubCampuses().map((campus) => ({
     campus,
     exercises: getExercisesForCampus(campus.id),
   }));
+
+  // ?campus=<id> pre-opens that campus panel — used by the Setup guide's
+  // back link so returning lands where the visitor left off.
+  const requestedCampus = useSearchParams().get("campus");
+  const [openCampusId, setOpenCampusId] = useState<string | null>(
+    campuses.some(({ campus }) => campus.id === requestedCampus) ? requestedCampus : null
+  );
 
   const openEntry = campuses.find(
     ({ campus, exercises }) => campus.id === openCampusId && exercises.length > 0

@@ -52,7 +52,7 @@ export default function SetupClient(props: { params: Promise<{ lng: string }> })
     <div className="px-4 py-8">
       <div className="container-app max-w-3xl">
         <Link
-          href={`/${lng}/playground`}
+          href={`/${lng}/playground?campus=automation`}
           className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text-primary)]"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">

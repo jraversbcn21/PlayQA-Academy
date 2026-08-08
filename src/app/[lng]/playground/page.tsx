@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { useTranslation } from "@/lib/i18n";
 import { buildAlternates } from "@/lib/seo";
 import PlaygroundIndexClient from "./PlaygroundIndexClient";
@@ -28,5 +29,11 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 }
 
 export default function PlaygroundPage(props: PageProps) {
-  return <PlaygroundIndexClient params={props.params} />;
+  // Suspense boundary required by useSearchParams (the ?campus= pre-open)
+  // on a statically prerendered page.
+  return (
+    <Suspense>
+      <PlaygroundIndexClient params={props.params} />
+    </Suspense>
+  );
 }
