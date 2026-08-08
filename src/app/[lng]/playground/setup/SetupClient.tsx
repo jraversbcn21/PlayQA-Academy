@@ -25,16 +25,18 @@ export default function SetupClient(props: { params: Promise<{ lng: string }> })
     {
       titleEs: "2. Configura baseURL en playwright.config.ts",
       titleEn: "2. Configure baseURL in playwright.config.ts",
-      code: `import { defineConfig } from '@playwright/test';\n\nexport default defineConfig({\n  use: {\n    baseURL: '${playgroundUrl}',\n    // other options...\n  },\n});`,
-      descEs: "Abre playwright.config.ts y añade la propiedad `baseURL` dentro de `use`. Esto te permite usar rutas relativas en page.goto('/login').",
-      descEn: "Open playwright.config.ts and add the `baseURL` property inside `use`. This lets you use relative paths like page.goto('/login').",
+      code: `import { defineConfig } from '@playwright/test';\n\nexport default defineConfig({\n  use: {\n    // La barra final es importante\n    baseURL: '${playgroundUrl}/',\n    // other options...\n  },\n});`,
+      descEs: "Abre playwright.config.ts y añade la propiedad `baseURL` dentro de `use`. La barra final (`/`) es imprescindible: permite que las rutas relativas sin barra inicial — page.goto('login') — resuelvan dentro del Playground. Con page.goto('/login') (barra inicial) la URL se resuelve desde la raíz del dominio y el test fallaría con 404.",
+      descEn: "Open playwright.config.ts and add the `baseURL` property inside `use`. The trailing slash matters: it lets relative paths without a leading slash — page.goto('login') — resolve inside the Playground. With page.goto('/login') (leading slash) the URL resolves from the domain root and the test would fail with a 404.",
     },
     {
       titleEs: "3. Plantilla de tu primer test",
       titleEn: "3. First test template",
-      code: `import { test, expect } from '@playwright/test';\n\ntest('login with valid credentials', async ({ page }) => {\n  await page.goto('/login');\n\n  // Find elements by their accessible label\n  await page.getByLabel('Email').fill('student@playq.test');\n  await page.getByLabel('Password').fill('Playwright123!');\n\n  // Find the submit button by its role and accessible name\n  await page.getByRole('button', { name: 'Sign In' }).click();\n\n  // Assert the URL changed to the dashboard\n  await expect(page).toHaveURL(/\\/login\\/dashboard/);\n\n  // Assert the welcome message is visible\n  await expect(page.getByText('Welcome back')).toBeVisible();\n});`,
-      descEs: "Copia este test en tests/playground.spec.ts. Usa getByRole, getByLabel y getByText — las estrategias de localización recomendadas por Playwright.",
-      descEn: "Copy this test into tests/playground.spec.ts. Use getByRole, getByLabel, and getByText — Playwright's recommended locator strategies.",
+      code: lng === "es"
+        ? `import { test, expect } from '@playwright/test';\n\ntest('login con credenciales válidas', async ({ page }) => {\n  await page.goto('login');\n\n  // Localiza los campos por su etiqueta accesible\n  await page.getByLabel('Email').fill('student@playq.test');\n  await page.getByLabel('Password').fill('Playwright123!');\n\n  // Localiza el botón por su rol y nombre accesible\n  // (acotado al formulario: el navbar tiene otro botón "Iniciar sesión")\n  await page.locator('form').getByRole('button', { name: 'Iniciar Sesión' }).click();\n\n  // El login muestra el mensaje de éxito en la misma página (no navega)\n  await expect(page.getByRole('heading', { name: '¡Inicio de sesión exitoso!' })).toBeVisible();\n  await expect(page.getByText('Bienvenido de nuevo')).toBeVisible();\n});`
+        : `import { test, expect } from '@playwright/test';\n\ntest('login with valid credentials', async ({ page }) => {\n  await page.goto('login');\n\n  // Find elements by their accessible label\n  await page.getByLabel('Email').fill('student@playq.test');\n  await page.getByLabel('Password').fill('Playwright123!');\n\n  // Find the submit button by its role and accessible name\n  // (scoped to the form: the navbar has its own "Sign in" button)\n  await page.locator('form').getByRole('button', { name: 'Sign In' }).click();\n\n  // Login shows the success message on the same page (no navigation)\n  await expect(page.getByRole('heading', { name: 'Login Successful!' })).toBeVisible();\n  await expect(page.getByText('Welcome back')).toBeVisible();\n});`,
+      descEs: "Copia este test en tests/playground.spec.ts. Usa getByRole, getByLabel y getByText — las estrategias de localización recomendadas por Playwright. Ojo: los textos del ejercicio dependen del idioma de la página; esta plantilla apunta a la versión en español (/es/).",
+      descEn: "Copy this test into tests/playground.spec.ts. Use getByRole, getByLabel, and getByText — Playwright's recommended locator strategies. Note: the exercise texts depend on the page language; this template targets the English version (/en/).",
     },
     {
       titleEs: "4. Ejecuta tus tests",

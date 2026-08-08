@@ -91,9 +91,11 @@ export default function CatalogClient(props: { params: Promise<{ lng: string }> 
           locatorStrategies={[
             lng === "es" ? "Usa page.getByRole('checkbox', { name: 'Books' }) para filtros de categoría." : "Use page.getByRole('checkbox', { name: 'Books' }) for category filters.",
             lng === "es" ? "page.getByRole('combobox', { name: 'Sort by' }) para el dropdown de ordenamiento." : "page.getByRole('combobox', { name: 'Sort by' }) for the sort dropdown.",
-            lng === "es" ? "page.getByRole('button', { name: 'Add to Cart' }).first() para el primer producto." : "page.getByRole('button', { name: 'Add to Cart' }).first() for the first product.",
+            lng === "es" ? "page.getByRole('button', { name: 'Agregar al Carrito' }).first() para el primer producto." : "page.getByRole('button', { name: 'Add to Cart' }).first() for the first product.",
           ]}
-          testTemplate={`import { test, expect } from '@playwright/test';\n\ntest('filter and sort products', async ({ page }) => {\n  await page.goto('/catalog');\n  await page.getByRole('checkbox', { name: 'Books' }).check();\n  await page.getByRole('combobox', { name: 'Sort by' }).selectOption('price_asc');\n  await expect(page.getByRole('article')).toHaveCount(1);\n});`}
+          testTemplate={lng === "es"
+            ? `import { test, expect } from '@playwright/test';\n\ntest('filtrar y ordenar productos', async ({ page }) => {\n  await page.goto('catalog');\n  await page.getByRole('checkbox', { name: 'Books' }).check();\n  await page.getByRole('combobox', { name: 'Sort by' }).selectOption('price_asc');\n  // El catálogo tiene 3 productos en la categoría Books\n  await expect(page.getByRole('article')).toHaveCount(3);\n});`
+            : `import { test, expect } from '@playwright/test';\n\ntest('filter and sort products', async ({ page }) => {\n  await page.goto('catalog');\n  await page.getByRole('checkbox', { name: 'Books' }).check();\n  await page.getByRole('combobox', { name: 'Sort by' }).selectOption('price_asc');\n  // The catalog has 3 products in the Books category\n  await expect(page.getByRole('article')).toHaveCount(3);\n});`}
         />
 
         {/* Cart counter */}

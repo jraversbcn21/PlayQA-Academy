@@ -73,9 +73,11 @@ export default function CartClient(props: { params: Promise<{ lng: string }> }) 
           locatorStrategies={[
             lng === "es" ? "page.getByRole('spinbutton') para campos numéricos de cantidad." : "page.getByRole('spinbutton') for quantity number inputs.",
             lng === "es" ? "Verifica totales con page.getByTestId('cart-total')." : "Verify totals with page.getByTestId('cart-total').",
-            lng === "es" ? "page.getByRole('button', { name: 'Remove' }) para eliminar items." : "page.getByRole('button', { name: 'Remove' }) to remove items.",
+            lng === "es" ? "page.getByRole('button', { name: 'Eliminar' }) para eliminar items (el nombre accesible incluye el producto)." : "page.getByRole('button', { name: 'Remove' }) to remove items (the accessible name includes the product).",
           ]}
-          testTemplate={`import { test, expect } from '@playwright/test';\n\ntest('apply coupon reduces total', async ({ page }) => {\n  await page.goto('/cart');\n  await page.getByPlaceholder('Enter coupon code').fill('PLAYQ10');\n  await page.getByRole('button', { name: 'Apply' }).click();\n  await expect(page.getByTestId('cart-total')).not.toContainText('$49.96');\n});`}
+          testTemplate={lng === "es"
+            ? `import { test, expect } from '@playwright/test';\n\ntest('el cupón reduce el total', async ({ page }) => {\n  await page.goto('cart');\n  // Total inicial: $29.99 + 2×$9.99 + 8% de impuesto\n  await expect(page.getByTestId('cart-total')).toHaveText('$53.97');\n  await page.getByPlaceholder('Código de cupón').fill('PLAYQ10');\n  await page.getByRole('button', { name: 'Aplicar' }).click();\n  // Con el 10% de descuento aplicado\n  await expect(page.getByTestId('cart-total')).toHaveText('$48.57');\n});`
+            : `import { test, expect } from '@playwright/test';\n\ntest('apply coupon reduces total', async ({ page }) => {\n  await page.goto('cart');\n  // Initial total: $29.99 + 2×$9.99 + 8% tax\n  await expect(page.getByTestId('cart-total')).toHaveText('$53.97');\n  await page.getByPlaceholder('Enter coupon code').fill('PLAYQ10');\n  await page.getByRole('button', { name: 'Apply' }).click();\n  // With the 10% discount applied\n  await expect(page.getByTestId('cart-total')).toHaveText('$48.57');\n});`}
         />
 
         {items.length === 0 ? (

@@ -45,11 +45,13 @@ export default function FramesClient(props: { params: Promise<{ lng: string }> }
           description={lng === "es" ? "Practica navegación entre frames, ventanas emergentes y modales. Usa page.frame(), page.waitForEvent('popup') y manejo de diálogos." : "Practice frame switching, popup windows, and modals. Use page.frame(), page.waitForEvent('popup'), and dialog handling."}
           linkedLessons={["M4: Frames & Windows"]}
           locatorStrategies={[
-            lng === "es" ? "Para iframe: const frame = page.frameLocator('iframe'); await frame.getByLabel('Name').fill('test');" : "For iframe: const frame = page.frameLocator('iframe'); await frame.getByLabel('Name').fill('test');",
-            lng === "es" ? "Para popup: const [popup] = await Promise.all([page.waitForEvent('popup'), page.click('#open-popup')]); await popup.getByLabel('Name').fill('test');" : "For popup: const [popup] = await Promise.all([page.waitForEvent('popup'), page.click('#open-popup')]); await popup.getByLabel('Name').fill('test');",
+            lng === "es" ? "Para iframe: const frame = page.frameLocator('iframe'); await frame.getByLabel('Nombre').fill('test');" : "For iframe: const frame = page.frameLocator('iframe'); await frame.getByLabel('Name').fill('test');",
+            lng === "es" ? "Para popup: const [popup] = await Promise.all([page.waitForEvent('popup'), page.click('#open-popup')]); await popup.getByLabel('Nombre').fill('test');" : "For popup: const [popup] = await Promise.all([page.waitForEvent('popup'), page.click('#open-popup')]); await popup.getByLabel('Name').fill('test');",
             lng === "es" ? "Para modales: usa page.getByRole('dialog') para localizar el modal." : "For modals: use page.getByRole('dialog') to locate the modal.",
           ]}
-          testTemplate={`import { test, expect } from '@playwright/test';\n\ntest('interact with iframe', async ({ page }) => {\n  await page.goto('/frames');\n  const iframe = page.frameLocator('iframe');\n  await iframe.getByLabel('Name').fill('Test User');\n  await iframe.getByRole('button', { name: 'Submit' }).click();\n  await expect(iframe.getByText('Submitted')).toBeVisible();\n});`}
+          testTemplate={lng === "es"
+            ? `import { test, expect } from '@playwright/test';\n\ntest('interactuar con el iframe', async ({ page }) => {\n  await page.goto('frames');\n  const iframe = page.frameLocator('iframe');\n  await iframe.getByLabel('Nombre').fill('Test User');\n  await iframe.getByRole('button', { name: 'Enviar' }).click();\n  await expect(iframe.getByText('Enviado')).toBeVisible();\n});`
+            : `import { test, expect } from '@playwright/test';\n\ntest('interact with iframe', async ({ page }) => {\n  await page.goto('frames');\n  const iframe = page.frameLocator('iframe');\n  await iframe.getByLabel('Name').fill('Test User');\n  await iframe.getByRole('button', { name: 'Submit' }).click();\n  await expect(iframe.getByText('Submitted')).toBeVisible();\n});`}
         />
 
         {/* Nested iframe */}

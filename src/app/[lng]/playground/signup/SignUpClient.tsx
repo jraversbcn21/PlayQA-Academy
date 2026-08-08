@@ -106,11 +106,13 @@ export default function SignUpClient(props: { params: Promise<{ lng: string }> }
           description={lng === "es" ? "Formulario multi-paso con validación por etapa. Practica navegación condicional, selectores anidados y verificación de estado entre pasos." : "Multi-step form with per-stage validation. Practice conditional navigation, nested selectors, and cross-step state verification."}
           linkedLessons={["M3: Locators", "M4: Actions", "M4: Assertions"]}
           locatorStrategies={[
-            lng === "es" ? "Usa page.getByRole('button', { name: 'Next' }) y page.getByRole('button', { name: 'Back' }) para navegación." : "Use page.getByRole('button', { name: 'Next' }) and page.getByRole('button', { name: 'Back' }) for navigation.",
-            lng === "es" ? "Verifica que los mensajes de error aparecen con page.getByText('This field is required')." : "Verify error messages appear with page.getByText('This field is required').",
-            lng === "es" ? "Después del registro, verifica el resumen con page.getByText('Registration Successful') y los datos mostrados." : "After registration, verify the summary with page.getByText('Registration Successful') and the displayed data.",
+            lng === "es" ? "Usa page.getByRole('button', { name: 'Siguiente' }) y page.getByRole('button', { name: 'Atrás' }) para navegación." : "Use page.getByRole('button', { name: 'Next' }) and page.getByRole('button', { name: 'Back' }) for navigation.",
+            lng === "es" ? "Verifica que los mensajes de error aparecen con page.getByText('Este campo es obligatorio')." : "Verify error messages appear with page.getByText('This field is required').",
+            lng === "es" ? "Después del registro, verifica el resumen con page.getByText('¡Registro exitoso!') y los datos mostrados." : "After registration, verify the summary with page.getByText('Registration Successful') and the displayed data.",
           ]}
-          testTemplate={`import { test, expect } from '@playwright/test';\n\ntest('complete sign up wizard', async ({ page }) => {\n  await page.goto('/signup');\n  await page.getByLabel('Full Name').fill('Jane Doe');\n  await page.getByLabel('Email').fill('jane@test.com');\n  await page.getByRole('button', { name: 'Next' }).click();\n  // Continue through steps...\n});`}
+          testTemplate={lng === "es"
+            ? `import { test, expect } from '@playwright/test';\n\ntest('avanzar el asistente de registro', async ({ page }) => {\n  await page.goto('signup');\n  await page.getByLabel('Nombre Completo').fill('Jane Doe');\n  await page.getByLabel('Email').fill('jane@test.com');\n  await page.getByRole('button', { name: 'Siguiente' }).click();\n  // El paso 2 (Cuenta) ya es visible\n  await expect(page.getByLabel('Nombre de Usuario')).toBeVisible();\n  // Continúa con el resto de pasos...\n});`
+            : `import { test, expect } from '@playwright/test';\n\ntest('advance the sign up wizard', async ({ page }) => {\n  await page.goto('signup');\n  await page.getByLabel('Full Name').fill('Jane Doe');\n  await page.getByLabel('Email').fill('jane@test.com');\n  await page.getByRole('button', { name: 'Next' }).click();\n  // Step 2 (Account) is now visible\n  await expect(page.getByLabel('Username')).toBeVisible();\n  // Continue through the remaining steps...\n});`}
         />
 
         {/* Step indicator */}

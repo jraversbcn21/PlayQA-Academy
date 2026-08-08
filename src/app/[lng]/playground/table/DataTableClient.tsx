@@ -102,11 +102,13 @@ export default function DataTableClient(props: { params: Promise<{ lng: string }
           description={lng === "es" ? "Tabla con ordenamiento, filtros, paginación, selección múltiple y edición inline. Practica localizadores de tabla." : "Table with sorting, filtering, pagination, multi-select, and inline editing. Practice table locators."}
           linkedLessons={["M3: Locators", "M4: Actions"]}
           locatorStrategies={[
-            lng === "es" ? "page.getByRole('columnheader', { name: 'Name' }) para encabezados de columna." : "page.getByRole('columnheader', { name: 'Name' }) for column headers.",
+            lng === "es" ? "page.getByRole('columnheader', { name: 'Nombre' }) para encabezados de columna." : "page.getByRole('columnheader', { name: 'Name' }) for column headers.",
             lng === "es" ? "page.getByRole('row', { name: /Alice/ }) para filas específicas." : "page.getByRole('row', { name: /Alice/ }) for specific rows.",
-            lng === "es" ? "page.getByRole('checkbox', { name: 'Select all' }) para selección masiva." : "page.getByRole('checkbox', { name: 'Select all' }) for bulk selection.",
+            lng === "es" ? "page.getByRole('checkbox', { name: 'Seleccionar todo' }) para selección masiva." : "page.getByRole('checkbox', { name: 'Select all' }) for bulk selection.",
           ]}
-          testTemplate={`import { test, expect } from '@playwright/test';\n\ntest('sort and filter table', async ({ page }) => {\n  await page.goto('/table');\n  await page.getByRole('columnheader', { name: 'Name' }).click();\n  const firstRow = page.getByRole('row').nth(1);\n  await expect(firstRow).toContainText('Alice');\n});`}
+          testTemplate={lng === "es"
+            ? `import { test, expect } from '@playwright/test';\n\ntest('ordenar y filtrar la tabla', async ({ page }) => {\n  await page.goto('table');\n  await page.getByRole('columnheader', { name: 'Nombre' }).click();\n  // nth(0) = encabezados, nth(1) = fila de filtros, nth(2) = primera fila de datos\n  const firstDataRow = page.getByRole('row').nth(2);\n  await expect(firstDataRow).toContainText('Alice');\n});`
+            : `import { test, expect } from '@playwright/test';\n\ntest('sort and filter table', async ({ page }) => {\n  await page.goto('table');\n  await page.getByRole('columnheader', { name: 'Name' }).click();\n  // nth(0) = headers, nth(1) = filter row, nth(2) = first data row\n  const firstDataRow = page.getByRole('row').nth(2);\n  await expect(firstDataRow).toContainText('Alice');\n});`}
         />
 
         {/* Toolbar */}

@@ -54,7 +54,9 @@ export default function DynamicClient(props: { params: Promise<{ lng: string }> 
             lng === "es" ? "Usa expect(locator).toBeVisible({ timeout: 5000 }) para esperar que aparezca algo tras un delay." : "Use expect(locator).toBeVisible({ timeout: 5000 }) to wait for something to appear after a delay.",
             lng === "es" ? "Para elementos que desaparecen: expect(locator).not.toBeVisible()." : "For disappearing elements: expect(locator).not.toBeVisible().",
           ]}
-          testTemplate={`import { test, expect } from '@playwright/test';\n\ntest('wait for content after click', async ({ page }) => {\n  await page.goto('/dynamic');\n  await page.getByRole('button', { name: 'Load Content' }).click();\n  // Playwright auto-waits for the content to appear\n  await expect(page.getByText('Content loaded successfully!')).toBeVisible({ timeout: 5000 });\n});`}
+          testTemplate={lng === "es"
+            ? `import { test, expect } from '@playwright/test';\n\ntest('esperar contenido tras el click', async ({ page }) => {\n  await page.goto('dynamic');\n  await page.getByRole('button', { name: 'Cargar Contenido' }).click();\n  // Playwright auto-espera a que aparezca el contenido\n  await expect(page.getByText('¡Contenido cargado exitosamente!')).toBeVisible({ timeout: 5000 });\n});`
+            : `import { test, expect } from '@playwright/test';\n\ntest('wait for content after click', async ({ page }) => {\n  await page.goto('dynamic');\n  await page.getByRole('button', { name: 'Load Content' }).click();\n  // Playwright auto-waits for the content to appear\n  await expect(page.getByText('Content loaded successfully!')).toBeVisible({ timeout: 5000 });\n});`}
         />
 
         {/* Section 1: Loading */}

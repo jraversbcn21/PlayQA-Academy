@@ -41,6 +41,8 @@ export default function ApiPlaygroundClient(props: { params: Promise<{ lng: stri
 
   const { t: _t } = useTranslation("common");
   const [expanded, setExpanded] = useState<number | null>(null);
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://www.playqacademy.com";
+  const apiBase = `${baseUrl}/api/playground`;
 
   return (
     <div className="px-4 py-8">
@@ -54,7 +56,9 @@ export default function ApiPlaygroundClient(props: { params: Promise<{ lng: stri
             lng === "es" ? "Verifica status codes con expect(response.status()).toBe(200)." : "Verify status codes with expect(response.status()).toBe(200).",
             lng === "es" ? "Para endpoints protegidos, pasa el header Authorization: Bearer <token>." : "For protected endpoints, pass the Authorization: Bearer <token> header.",
           ]}
-          testTemplate={`import { test, expect } from '@playwright/test';\n\nconst BASE = 'http://localhost:3000/api/playground';\n\ntest('login and access protected endpoint', async ({ request }) => {\n  // Login\n  const loginRes = await request.post(BASE + '/auth/login', {\n    data: { email: 'student@playq.test', password: 'Playwright123!' }\n  });\n  expect(loginRes.status()).toBe(200);\n  const { data } = await loginRes.json();\n\n  // Access protected\n  const protectedRes = await request.get(BASE + '/protected', {\n    headers: { Authorization: \`Bearer \${data.token}\` }\n  });\n  expect(protectedRes.status()).toBe(200);\n});`}
+          testTemplate={lng === "es"
+            ? `import { test, expect } from '@playwright/test';\n\nconst BASE = '${apiBase}';\n\ntest('login y acceso a endpoint protegido', async ({ request }) => {\n  // Login\n  const loginRes = await request.post(BASE + '/auth/login', {\n    data: { email: 'student@playq.test', password: 'Playwright123!' }\n  });\n  expect(loginRes.status()).toBe(200);\n  const { data } = await loginRes.json();\n\n  // Acceso al endpoint protegido\n  const protectedRes = await request.get(BASE + '/protected', {\n    headers: { Authorization: \`Bearer \${data.token}\` }\n  });\n  expect(protectedRes.status()).toBe(200);\n});`
+            : `import { test, expect } from '@playwright/test';\n\nconst BASE = '${apiBase}';\n\ntest('login and access protected endpoint', async ({ request }) => {\n  // Login\n  const loginRes = await request.post(BASE + '/auth/login', {\n    data: { email: 'student@playq.test', password: 'Playwright123!' }\n  });\n  expect(loginRes.status()).toBe(200);\n  const { data } = await loginRes.json();\n\n  // Access protected\n  const protectedRes = await request.get(BASE + '/protected', {\n    headers: { Authorization: \`Bearer \${data.token}\` }\n  });\n  expect(protectedRes.status()).toBe(200);\n});`}
         />
 
         <div className="space-y-4">

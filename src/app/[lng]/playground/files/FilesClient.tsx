@@ -54,11 +54,13 @@ export default function FilesClient(props: { params: Promise<{ lng: string }> })
           description={lng === "es" ? "Practica file input, drag-and-drop, validación de tipos y descargas de archivos." : "Practice file input, drag-and-drop, type validation, and file downloads."}
           linkedLessons={["M4: Special Actions"]}
           locatorStrategies={[
-            lng === "es" ? "page.getByLabel('Choose file') o page.locator('input[type=file]') para el input de archivo." : "page.getByLabel('Choose file') or page.locator('input[type=file]') for file input.",
+            lng === "es" ? "page.getByLabel('Seleccionar archivo') o page.locator('input[type=file]') para el input de archivo." : "page.getByLabel('Choose file') or page.locator('input[type=file]') for file input.",
             lng === "es" ? "Usa page.locator('input[type=file]').setInputFiles('path/to/file.png') en Playwright." : "Use page.locator('input[type=file]').setInputFiles('path/to/file.png') in Playwright.",
-            lng === "es" ? "Para descargas: const download = await page.waitForEvent('download'); await page.getByRole('button', { name: 'Download CSV' }).click();" : "For downloads: const download = await page.waitForEvent('download'); await page.getByRole('button', { name: 'Download CSV' }).click();",
+            lng === "es" ? "Para descargas: const download = await page.waitForEvent('download'); await page.getByRole('button', { name: 'Descargar CSV' }).click();" : "For downloads: const download = await page.waitForEvent('download'); await page.getByRole('button', { name: 'Download CSV' }).click();",
           ]}
-          testTemplate={`import { test, expect } from '@playwright/test';\nimport path from 'path';\n\ntest('upload and verify file', async ({ page }) => {\n  await page.goto('/files');\n  await page.locator('input[type=file]').first().setInputFiles(path.join(__dirname, 'test-image.png'));\n  await expect(page.getByText('File uploaded')).toBeVisible();\n});`}
+          testTemplate={lng === "es"
+            ? `import { test, expect } from '@playwright/test';\n\ntest('subir y verificar archivo', async ({ page }) => {\n  await page.goto('files');\n  // Un PNG de 1×1 generado en memoria — no necesitas ningún archivo en disco\n  const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';\n  await page.locator('input[type=file]').first().setInputFiles({\n    name: 'test-image.png',\n    mimeType: 'image/png',\n    buffer: Buffer.from(png, 'base64'),\n  });\n  await expect(page.getByText('Archivo subido')).toBeVisible();\n});`
+            : `import { test, expect } from '@playwright/test';\n\ntest('upload and verify file', async ({ page }) => {\n  await page.goto('files');\n  // A 1×1 PNG generated in memory — no file on disk needed\n  const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';\n  await page.locator('input[type=file]').first().setInputFiles({\n    name: 'test-image.png',\n    mimeType: 'image/png',\n    buffer: Buffer.from(png, 'base64'),\n  });\n  await expect(page.getByText('File uploaded')).toBeVisible();\n});`}
         />
 
         {/* Single file upload */}
