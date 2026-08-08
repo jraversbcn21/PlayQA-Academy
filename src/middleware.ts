@@ -17,6 +17,12 @@ import {
   fallbackLng,
   cookieName,
 } from "@/lib/i18n/settings";
+import { SITE_URL } from "@/lib/constants/site";
+
+// The production Vercel alias — NOT the wildcard preview-deploy hosts
+// (playqacademy-git-*.vercel.app), which must keep serving their own
+// content untouched for preview testing.
+const VERCEL_APP_HOST = "playqacademy.vercel.app";
 
 // Configure accept-language to only consider our supported set.
 acceptLanguage.languages([...languages]);
@@ -79,6 +85,18 @@ function isStaticAsset(pathname: string): boolean {
 
 export function middleware(request: NextRequest): NextResponse | undefined {
   const { pathname, search } = request.nextUrl;
+
+  // 0. Canonical-host redirect: playqacademy.vercel.app serves the same
+  // deployment as www.playqacademy.com and Vercel can't disable it. A real
+  // 308 is a far stronger duplicate-content signal to Google than the
+  // canonical tags alone ("Duplicate, Google chose different canonical
+  // than user", Search Console 2026-08-08).
+  if (request.headers.get("host") === VERCEL_APP_HOST) {
+    return NextResponse.redirect(
+      new URL(`${pathname}${search}`, SITE_URL),
+      308
+    );
+  }
 
   if (isStaticAsset(pathname)) {
     return NextResponse.next();
