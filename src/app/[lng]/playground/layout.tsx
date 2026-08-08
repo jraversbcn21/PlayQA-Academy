@@ -63,55 +63,40 @@ export default function PlaygroundLayout(props: PlaygroundLayoutProps) {
       {/* Sub-nav — hidden on the index, where the campus accordion is the navigator */}
       {!isIndex && (
         <div className="sticky top-16 z-30 border-b border-[var(--color-border)] bg-[var(--color-bg-primary)]/90 backdrop-blur-lg">
-        <div className="overflow-x-auto scrollbar-hide">
-          <nav className="container-app flex gap-1 py-2" role="navigation" aria-label="Playground exercises">
-            <Link
-              href={`/${lng}/playground`}
-              className={[
-                "shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
-                pathname === `/${lng}/playground`
-                  ? "bg-brand-forest-600 text-white"
-                  : "text-[var(--color-text-muted)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]",
-              ].join(" ")}
-            >
-              🏠 {lng === "es" ? "Inicio" : "Home"}
-            </Link>
-            {visibleExercises.map((ex) => {
-              const fullHref = `/${lng}${ex.href}`;
-              const isActive = pathname.startsWith(fullHref);
-              const label = ex.title[lng as "es" | "en"] ?? ex.title.en;
-              return (
-                <Link
-                  key={ex.href}
-                  href={fullHref}
-                  className={[
-                    "shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors flex items-center gap-1",
-                    isActive
-                      ? "bg-brand-forest-600 text-white"
-                      : "text-[var(--color-text-muted)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]",
-                  ].join(" ")}
-                  title={label}
-                >
-                  <span aria-hidden="true">{ex.icon}</span>
-                  <span className="hidden sm:inline">{label}</span>
-                </Link>
-              );
-            })}
-            {activeCampusId === "automation" && (
+        <nav className="container-app flex flex-wrap justify-center gap-1.5 py-2" role="navigation" aria-label="Playground exercises">
+          <Link
+            href={`/${lng}/playground`}
+            className={[
+              "rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
+              pathname === `/${lng}/playground`
+                ? "bg-brand-forest-600 text-white"
+                : "text-[var(--color-text-muted)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]",
+            ].join(" ")}
+          >
+            🏠 {lng === "es" ? "Inicio" : "Home"}
+          </Link>
+          {visibleExercises.map((ex) => {
+            const fullHref = `/${lng}${ex.href}`;
+            const isActive = pathname.startsWith(fullHref);
+            const label = ex.title[lng as "es" | "en"] ?? ex.title.en;
+            return (
               <Link
-                href={`/${lng}/playground/setup`}
+                key={ex.href}
+                href={fullHref}
                 className={[
-                  "shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
-                  pathname === `/${lng}/playground/setup`
-                    ? "bg-brand-gold-600 text-white"
-                    : "text-brand-gold-400 hover:bg-brand-gold-500/10",
+                  "rounded-lg px-3 py-1.5 text-xs font-medium transition-colors flex items-center gap-1",
+                  isActive
+                    ? "bg-brand-forest-600 text-white"
+                    : "text-[var(--color-text-muted)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]",
                 ].join(" ")}
+                title={label}
               >
-                ⚙️ {lng === "es" ? "Setup" : "Setup"}
+                <span aria-hidden="true">{ex.icon}</span>
+                <span className="hidden sm:inline">{label}</span>
               </Link>
-            )}
-          </nav>
-        </div>
+            );
+          })}
+        </nav>
         </div>
       )}
       {children}
