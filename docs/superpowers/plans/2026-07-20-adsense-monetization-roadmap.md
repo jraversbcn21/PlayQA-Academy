@@ -69,7 +69,7 @@ Nothing else matters until Google can find and index the site.
 
 ### Duplicate content note
 
-Vercel **cannot** disable `playqacademy.vercel.app`; it will keep serving identical content alongside `playqacademy.com`/`www.playqacademy.com`. This is not fixable in the Vercel dashboard — the fix is `canonical` tags always pointing at `SITE_URL`. Do not waste time trying to switch the `.vercel.app` URL off.
+Vercel **cannot** disable `playqacademy.vercel.app`; it serves the same deployment as `www.playqacademy.com`. This is not fixable in the Vercel dashboard. First mitigation was `canonical` tags pointing at `SITE_URL` — but Search Console (2026-08-08, "Duplicate, Google chose different canonical than user") showed Google ignoring the hint for some pages, likely because the `.vercel.app` host has the older crawl history. **Fixed properly on 2026-08-08 (commit `b54fb3f`):** `middleware.ts` now 308-redirects any request whose `Host` is `playqacademy.vercel.app` to the same path on `www.playqacademy.com` — verified live via a real-browser redirect-chain check (308 → 200). Preview-deploy hosts (`playqacademy-git-*.vercel.app`) are deliberately untouched. The Search Console "duplicate" entries should resolve themselves on Google's next recrawl (days-weeks); no action needed unless they persist past ~a month.
 
 ### Post-push verification false alarm (2026-07-20) — do not re-investigate
 
