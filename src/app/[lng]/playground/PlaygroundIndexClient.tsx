@@ -163,20 +163,13 @@ export default function PlaygroundIndexClient(props: PageProps) {
               </Link>
             </div>
             {openEntry.campus.id === "automation" && (
-              <Link
-                href={`/${lng}/playground/setup`}
-                className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-brand-gold-500/30 bg-brand-gold-500/10 px-4 py-3 transition-colors hover:border-brand-gold-500/60"
-              >
-                <span className="text-sm text-[var(--color-text-secondary)]">
-                  <span className="mr-2">⚙️</span>
-                  {lng === "es"
-                    ? "Para estos ejercicios necesitas Playwright en tu máquina."
-                    : "These exercises require Playwright on your machine."}
-                </span>
-                <span className="shrink-0 text-sm font-medium text-brand-gold-600 hover:underline">
-                  {lng === "es" ? "Guía de Setup (5 min) →" : "Setup Guide (5 min) →"}
-                </span>
-              </Link>
+              <div className="mb-4 flex justify-center">
+                <Link href={`/${lng}/playground/setup`}>
+                  <span className="inline-flex items-center rounded-lg bg-brand-gold-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-gold-500 transition-colors">
+                    ⚙️ {lng === "es" ? "Guía de Setup" : "Setup Guide"}
+                  </span>
+                </Link>
+              </div>
             )}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {openEntry.exercises.map((exercise) => (
