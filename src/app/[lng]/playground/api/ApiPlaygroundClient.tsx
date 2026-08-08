@@ -66,13 +66,14 @@ export default function ApiPlaygroundClient(props: { params: Promise<{ lng: stri
             <div key={i} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] overflow-hidden">
               <button
                 onClick={() => setExpanded(expanded === i ? null : i)}
-                className="flex w-full items-center gap-3 p-4 text-left hover:bg-[var(--color-bg-elevated)] transition-colors"
+                className="flex w-full flex-wrap items-center gap-x-3 gap-y-1.5 p-4 text-left hover:bg-[var(--color-bg-elevated)] transition-colors"
               >
                 <span className={["rounded px-2 py-0.5 font-mono text-xs font-bold", ep.method === "GET" ? "bg-brand-gold-500/20 text-brand-gold-400" : ep.method === "POST" ? "bg-brand-forest-500/20 text-brand-forest-400" : ep.method === "PUT" ? "bg-amber-500/20 text-amber-400" : "bg-red-500/20 text-red-400"].join(" ")}>
                   {ep.method}
                 </span>
-                <code className="font-mono text-sm text-[var(--color-text-primary)]">{ep.path}</code>
-                <span className="ml-auto text-xs text-[var(--color-text-muted)]">{lng === "es" ? ep.descEs : ep.descEn}</span>
+                <code className="break-all font-mono text-sm text-[var(--color-text-primary)]">{ep.path}</code>
+                {/* full-width line below on mobile; inline right-aligned from sm up */}
+                <span className="w-full text-xs text-[var(--color-text-muted)] sm:ml-auto sm:w-auto sm:text-right">{lng === "es" ? ep.descEs : ep.descEn}</span>
               </button>
               {expanded === i && (
                 <div className="border-t border-[var(--color-border)] p-4 space-y-4">
