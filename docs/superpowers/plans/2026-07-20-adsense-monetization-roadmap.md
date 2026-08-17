@@ -1,6 +1,6 @@
 # Growth & Monetization Roadmap — custom domain → traffic → AdSense
 
-> **Status:** Phases 0, 1, and 2 are all CLOSED and deployed to production — see AGENTS.md's "Verified in browser" #27-29 for the full Phase 2 verification, including the Search Console sitemap re-read confirming 174/174 URLs discovered. **Phase 3 is in progress:** the `privacy.s1Body` domain fix (`2b1442b`) and the `/contact` page (`a6b37cc`) are both shipped and live — see "Verified in browser" #30-31. **Only the LSSI aviso legal remains, blocked on fiscal details from Jorge's gestor.**
+> **Status:** Phases 0, 1, 2, and **3** are all CLOSED and deployed to production — see AGENTS.md's "Verified in browser" #27-29 for the full Phase 2 verification (including the Search Console sitemap re-read confirming 174/174 URLs discovered), #30-31 for the Phase 3 privacy/contact work, and **#35 for the LSSI aviso legal that closed Phase 3 on 2026-08-17**. **Next up is Phase 4 — pure observation, no code.**
 > **Started:** 2026-07-20. Owner: Jorge.
 > **Context:** AdSense readiness audit run 2026-07-20 against the live site + repo at commit `1e38460`.
 > **Reordered 2026-07-20** after establishing real traffic figures — see "Why this order" below.
@@ -103,16 +103,28 @@ Why this works:
 
 ---
 
-## Phase 3 — Contact & legal surfaces (IN PROGRESS)
+## Phase 3 — Contact & legal surfaces (CLOSED, 2026-08-17)
 
 Worth doing regardless of monetization; required before it.
 
 - [x] **Contact page** (`/contact`) — CLOSED (2026-08-01, commit `a6b37cc`). Real route (same server-component/`generateMetadata` pattern as `/privacy`/`/terms`), footer link (Legal column), sitemap entry. Reuses the existing `sidmaierlabs@gmail.com` address. Verified against a production build in both locales, deployed live.
-- [ ] **Aviso legal (LSSI)** — Spain requires identifying details once a site is monetized: name/company, **NIF/CIF**, registered address, contact email. Today the site only says "SidMaier, Barcelona". Note: PayPal is a payment processor, not a fiscal identity — it does not satisfy this. **Blocked on Jorge confirming the exact publishable details with his gestor**; out of scope for the assistant per `[[project_buymeacoffee_setup]]`. **Not started — the actual gate for this phase.**
+- [x] **Aviso legal (LSSI)** — CLOSED (2026-08-17, commit `9b8ef70`) as **Terms section 14**, not a separate route. See AGENTS.md "Verified in browser" #35.
+
+  This item sat blocked for four weeks on "Jorge confirming the details with his gestor". On 2026-08-17 he disclosed the premise was wrong: **he has no gestor and is not a company** — a private individual maintaining the site. The NIF/CIF and registered address this checklist was waiting for do not exist.
+
+  **What unblocked it:** LSSI Art. 10 binds *prestadores de servicios de la sociedad de la información*, and the law's own Anexo scopes that to services that constitute **an economic activity** for the provider. A personal, non-economic site falls outside it — the Exposición de Motivos says so explicitly. So section 14 identifies the owner (SidMaier, private individual, Barcelona, `sidmaierlabs@gmail.com`) and **states in the published text that the platform carries out no commercial activity** (free content, no sales, no ads, no subscriptions). That declaration is what supports omitting the NIF and postal address — it is a documented position, not an omission.
+
+  It also declares Buy Me a Coffee donations **altruistic and not consideration for access**, closing that grey area explicitly rather than leaving it ambiguous, and commits to expanding the section with full Art. 10 data if the project ever becomes an economic activity.
+
+  **⚠️ Phase 5 dependency:** shipping AdSense makes this an economic activity *unambiguously* — advertising is the textbook example. At that point the full Art. 10 identification (real name + surnames, NIF, publishable address) becomes mandatory, and this section must be rewritten alongside the privacy/cookies text. Budget for a PO box or virtual address (~€100-300/yr) if publishing a home address is unacceptable, plus a one-off gestor consultation on the fiscal side.
+
+  **Not legal advice.** This records a good-faith position taken by the owner after reviewing the scope of the law, not a lawyer's sign-off.
 - [x] **Fix the domain reference in `privacy.s1Body`** — CLOSED (2026-08-01, commit `2b1442b`). Was "accesible desde https://playq.academy" (a domain never deployed); now `https://www.playqacademy.com` in both locales, `lastUpdated` bumped since the body content changed.
 - [x] ~~Clean up the footer placeholders: `github.com`/`linkedin.com` generic landing pages, "Cursos" points at `/`~~ — already fixed outside this roadmap's own tracking, before Phase 3 formally started: GitHub/LinkedIn now read from a single `SOCIAL_LINKS` constant pointing at Jorge's real profiles (2026-07-21, commit `c54d0ac`, see AGENTS.md "Verified in browser" #25e), and the footer's "Cursos" entry was replaced with a Glossary link (2026-08-01, commit `168574c`, see #26). Nothing left to do here — re-check `Footer.tsx`/`SOCIAL_LINKS` before assuming otherwise if this resurfaces.
 
-**To resume Phase 3:** the only remaining item is the LSSI aviso legal, blocked on data from Jorge's gestor. Nothing else in this phase is left to build.
+**Phase 3 is closed — nothing left to build.** Do not re-open it as "pending fiscal data": that framing rested on a premise (an existing gestor, an existing legal entity) that was never true. The next legal work is Phase 5's, and only if AdSense actually happens.
+
+**Open, but not blocking this phase:** the Buy Me a Coffee account is registered as **"Empresa"** while its owner is a private individual — which now also contradicts what section 14 publishes. Tracked in AGENTS.md's backlog with the diagnostic steps and the reason the assisted-browser inspection failed (Google rejects credential entry in an automated browser). Needs Jorge; out of scope for the assistant on the fiscal side.
 
 ---
 
@@ -144,6 +156,7 @@ Shipping AdSense against this text violates AdSense policy (which requires a tru
 
 **Decision taken:** Option A — rewrite the legal text and run AdSense. Option B (freemium ad-free tier) deferred: shrinks inventory, complicates implementation. Option C (donations only) is the fallback if traffic never justifies ads.
 
+- [ ] **Rewrite Terms section 14 (aviso legal) to full LSSI Art. 10** — running ads makes this an economic activity unambiguously, so the carve-out Phase 3 relied on stops applying: real name + surnames, **NIF**, a publishable address, email. Budget ~€100-300/yr for a PO box or virtual address if a home address is unacceptable, plus a one-off gestor consultation. Also resolve the Buy Me a Coffee "Empresa" classification first — a business-registered payment account alongside a "no commercial activity" notice is the contradiction that would be hardest to defend
 - [ ] Rewrite `privacy.s3Body` + `privacy.s6Body` — declare Google as a third-party ad provider, disclose ad cookies
 - [ ] Rewrite `cookies.s2Body` / `s3Body` / `s4Body` + add an advertising-cookies section
 - [ ] Bump `lastUpdated` on both pages; keep `es`/`en` in sync (no empty `"en": ""`)
@@ -165,6 +178,6 @@ Shipping AdSense against this text violates AdSense policy (which requires a tru
 ## Answered (Jorge, 2026-07-20)
 
 1. **Traffic:** ~10 users, minimal. Drove the reorder above.
-2. **Fiscal details:** payments via PayPal — but that is not a fiscal identity; LSSI details still pending from his gestor.
+2. **Fiscal details:** ~~payments via PayPal — but that is not a fiscal identity; LSSI details still pending from his gestor.~~ **Superseded 2026-08-17:** there is no gestor and no legal entity — Jorge is a private individual. Phase 3 closed on the non-economic-activity carve-out instead. See Phase 3.
 3. **Content:** open QA Fundamentals only. → Phase 2.
 4. **Search Console:** set up and confirmed 2026-08-01 — sitemap re-read shows 174/174 URLs discovered. → Phase 1 closed.
