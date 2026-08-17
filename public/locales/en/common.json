@@ -562,7 +562,7 @@
   "terms": {
     "title": "Terms of Service",
     "metaDescription": "PlayQAcademy Terms of Service. Conditions of use for the QA learning platform: QA Fundamentals, ISTQB CTFL certification, and Playwright/TypeScript automation.",
-    "lastUpdated": "Last updated: June 18, 2026",
+    "lastUpdated": "Last updated: August 17, 2026",
     "backToHome": "Back to home",
     "s1Heading": "1. Acceptance of Terms",
     "s1Body": "By accessing or using PlayQAcademy (hereinafter, the Platform), you agree to be bound by these Terms of Service. If you do not agree with any of these terms, you must not use the Platform. These terms constitute a legally binding agreement between you (the User) and SidMaier (the Owner), creator and proprietor of PlayQAcademy.",
@@ -606,7 +606,9 @@
     "s12Heading": "12. Changes to the Terms",
     "s12Body": "We reserve the right to modify these Terms of Service at any time. Changes will become effective at the time of their publication on this page. The date of the last update will be displayed at the top of this page. It is your responsibility to periodically review these terms. Continued use of the Platform after the publication of changes constitutes acceptance of the new terms.",
     "s13Heading": "13. Contact",
-    "s13Body": "For any questions, inquiries, or communications related to these Terms of Service, you may contact the Owner at the following email address: sidmaierlabs@gmail.com."
+    "s13Body": "For any questions, inquiries, or communications related to these Terms of Service, you may contact the Owner at the following email address: sidmaierlabs@gmail.com.",
+    "s14Heading": "14. Legal Notice and Owner Identification",
+    "s14Body": "PlayQAcademy is a personal project developed and maintained by a private individual publishing under the name SidMaier, resident in Barcelona, Spain. Any communication, including any regarding this identifying information, may be sent to sidmaierlabs@gmail.com. The Platform offers all of its content free of charge: it does not sell products or services, does not display advertising, does not charge subscriptions, and does not carry out any commercial activity. Voluntary contributions that users may make through donation platforms are strictly altruistic: they do not constitute consideration for access to the Platform, nor do they grant any right to additional content, features, or support. Should PlayQAcademy carry out an economic activity in the future, this section will be expanded with the full identifying details required by Article 10 of Spanish Law 34/2002 on information society services and electronic commerce (LSSI-CE)."
   },
   "cookies": {
     "title": "Cookie Policy",

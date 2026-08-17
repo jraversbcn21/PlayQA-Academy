@@ -562,7 +562,7 @@
   "terms": {
     "title": "Términos de Servicio",
     "metaDescription": "Términos de Servicio de PlayQAcademy. Condiciones de uso de la plataforma de aprendizaje de QA: Fundamentos de QA, certificación ISTQB CTFL y automatización con Playwright y TypeScript.",
-    "lastUpdated": "Última actualización: 18 de junio de 2026",
+    "lastUpdated": "Última actualización: 17 de agosto de 2026",
     "backToHome": "Volver al inicio",
     "s1Heading": "1. Aceptación de los Términos",
     "s1Body": "Al acceder o utilizar PlayQAcademy (en adelante, la Plataforma), aceptas quedar vinculado por estos Términos de Servicio. Si no estás de acuerdo con alguno de estos términos, no debes utilizar la Plataforma. Estos términos constituyen un acuerdo legalmente vinculante entre tú (el Usuario) y SidMaier (el Titular), creador y propietario de PlayQAcademy.",
@@ -606,7 +606,9 @@
     "s12Heading": "12. Modificaciones de los Términos",
     "s12Body": "Nos reservamos el derecho de modificar estos Términos de Servicio en cualquier momento. Los cambios entrarán en vigor en el momento de su publicación en esta página. La fecha de última actualización se reflejará al inicio de esta página. Es tu responsabilidad revisar periódicamente estos términos. El uso continuado de la Plataforma tras la publicación de cambios constituye la aceptación de los nuevos términos.",
     "s13Heading": "13. Contacto",
-    "s13Body": "Para cualquier pregunta, consulta o comunicación relacionada con estos Términos de Servicio, puedes contactar con el Titular en la siguiente dirección de correo electrónico: sidmaierlabs@gmail.com."
+    "s13Body": "Para cualquier pregunta, consulta o comunicación relacionada con estos Términos de Servicio, puedes contactar con el Titular en la siguiente dirección de correo electrónico: sidmaierlabs@gmail.com.",
+    "s14Heading": "14. Aviso Legal e Identificación del Titular",
+    "s14Body": "PlayQAcademy es un proyecto personal desarrollado y mantenido por un particular (persona física) que publica bajo el nombre de SidMaier, con residencia en Barcelona, España. Puedes dirigir cualquier comunicación, incluida la relativa a esta información identificativa, a sidmaierlabs@gmail.com. La Plataforma ofrece todo su contenido de forma gratuita: no vende productos ni servicios, no muestra publicidad, no cobra suscripciones ni desarrolla ninguna actividad comercial. Las aportaciones voluntarias que los usuarios puedan realizar a través de plataformas de donación son estrictamente altruistas: no constituyen contraprestación por el acceso a la Plataforma ni otorgan derecho a contenido, funcionalidades o soporte adicionales. Si en el futuro PlayQAcademy pasara a desarrollar una actividad económica, esta sección se ampliará con los datos identificativos completos exigidos por el artículo 10 de la Ley 34/2002, de servicios de la sociedad de la información y de comercio electrónico (LSSI-CE)."
   },
   "cookies": {
     "title": "Política de Cookies",

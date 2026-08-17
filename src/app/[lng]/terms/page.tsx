@@ -46,6 +46,7 @@ export default async function TermsPage(props: PageParams) {
     { heading: "terms.s11Heading", body: "terms.s11Body" },
     { heading: "terms.s12Heading", body: "terms.s12Body" },
     { heading: "terms.s13Heading", body: "terms.s13Body" },
+    { heading: "terms.s14Heading", body: "terms.s14Body" },
   ];
 
   return (
